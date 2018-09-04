@@ -34,6 +34,7 @@ const controlRe = /[\x00-\x1f\x80-\x9f]/g; // eslint-disable-line no-control-reg
 const reservedRe = /^\.+$/;
 const windowsReservedRe = /^(con|prn|aux|nul|com[0-9]|lpt[0-9])(\..*)?$/i;
 const windowsTrailingRe = /[. ]+$/;
+const reservedUrlRe = /[&;@$=+,]/g;
 
 function sanitize(input, replacement) {
   return input
@@ -41,11 +42,13 @@ function sanitize(input, replacement) {
     .replace(controlRe, replacement)
     .replace(reservedRe, replacement)
     .replace(windowsReservedRe, replacement)
-    .replace(windowsTrailingRe, replacement);
+    .replace(windowsTrailingRe, replacement)
+    .replace(reservedUrlRe, replacement);
 }
 
 module.exports = (input, options) => {
   const replacement = (options && options.replacement && sanitize(options.replacement, '')) || '';
   const truncationLength = (options && options.truncationLength) || 255;
   return truncate(sanitize(input, replacement), truncationLength);
-};
+}
+

@@ -108,6 +108,18 @@ test("invalid replacement", function (t) {
   t.end();
 });
 
+test("Reserved delimiter uri characters", function(t) {
+  t.equal(sanitize("test;"), "test");
+  t.equal(sanitize("test@"), "test");
+  t.equal(sanitize("test$"), "test");
+  t.equal(sanitize("test&"), "test");
+  t.equal(sanitize("test="), "test");
+  t.equal(sanitize("test+"), "test");
+  t.equal(sanitize("test,"), "test");
+  t.equal(sanitize("test;@$&=,+"), "test");
+  t.end();
+});
+
 test("255 characters max", function(t) {
   var string = repeat("a", 300);
   t.ok(string.length > 255);
@@ -217,6 +229,8 @@ if ( ! process.browser) {
       repeat("a", 300),
       "the quick brown fox jumped over the lazy dog",
       "résumé",
+      "s.o.s",
+      "test-1",
       "hello\u0000world",
       "hello\nworld",
       "semi;colon.js",
@@ -236,6 +250,12 @@ if ( ! process.browser) {
       "space at end ",
       ".period",
       "period.",
+      "test@mail.com",
+      "hello$world",
+      "oliv&tom",
+      "a=b",
+      "a+b",
+      "a,b",
       "relative/path/to/some/dir",
       "/abs/path/to/some/dir",
       "~/.\u0000notssh/authorized_keys",
@@ -250,13 +270,14 @@ if ( ! process.browser) {
       "/..",
       "/../",
       "*.|.",
-      "./",
       "./foobar",
       "../foobar",
       "../../foobar",
       "./././foobar",
       "|*.what",
       "LPT9.asdf",
+      "com8",
+      "com88",
     ],
     blns
   ).forEach(function(str) {
