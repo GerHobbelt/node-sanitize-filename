@@ -195,6 +195,8 @@ if ( ! process.browser) {
   var fs = require("fs");
   var path = require("path");
   var mktemp = require("mktemp");
+  var rimraf = require("rimraf");
+  rimraf.sync("sanitize-filename-test-*");
   var tempdir = mktemp.createDirSync("sanitize-filename-test-XXXXXX");
 
   try {
